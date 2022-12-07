@@ -1,22 +1,27 @@
 package subway.domain;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class StationRepository {
-    private static final List<Station> stations = new ArrayList<>();
+    private static final Map<String, Station> stations = new LinkedHashMap<>();
 
-    public static List<Station> stations() {
-        return Collections.unmodifiableList(stations);
+    public static Collection<Station> stations() {
+        return Collections.unmodifiableCollection(stations.values());
     }
 
     public static void addStation(Station station) {
-        stations.add(station);
+        stations.putIfAbsent(station.getName(), station);
     }
 
-    public static boolean deleteStation(String name) {
-        return stations.removeIf(station -> Objects.equals(station.getName(), name));
+    public static void deleteStation(String name) {
+        stations.remove(name);
+    }
+
+    public static Station findStationByName(String name) {
+        return stations.get(name);
+    }
+
+    public static boolean isExistStation(String name) {
+        return stations.containsKey(name);
     }
 }
